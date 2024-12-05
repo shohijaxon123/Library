@@ -68,15 +68,74 @@ public class Main extends Application {
         Scene scene1 = new Scene(loginPane, 500, 300);
 
 
+        //---ADMIN SCENE---
+        Label lbl3 = new Label("Admin panel");
+        Button backToFirstButton = new Button("Go back to login");
+        Button btn4 = new Button("View all books");
+        Button btn5 = new Button("Add new book");
+        Button btn6 = new Button("Update book info");
+        Button btn7 = new Button("Delete book");
 
-        //Adminhere
+        VBox layout2 = new VBox(10);
+        layout2.getChildren().addAll(lbl3, btn4, btn5, btn6, btn7, backToFirstButton);
+        Scene scene2 = new Scene(layout2, 300, 250);
+
+        //Scene scene4 = new Scene(loginPane, 500, 300);
+
+        //registerButton.setOnAction(e -> {
+        //    stage.setScene(scene4);// this is scene for register(add) user
+        //});
+
+        backToFirstButton.setOnAction(event ->
+        {
+            stage.setScene(scene1);
+        });
 
         clearButton.setOnAction(event -> {
             usernameTextField.clear();
             passwordTextField.clear();
         });
 
-        //Userhere
+        //---USER SCENE---
+        Label appLabel = new Label("Welcome to E_Library");
+        appLabel.setFont(new Font("Constantia", 48));
+        appLabel.setTextFill(Color.WHITE);
+        Rectangle bg = new Rectangle(700, 100);
+        bg.setFill(Color.ORANGERED);
+        StackPane labelPane = new StackPane();
+
+        Button searchButton = new Button("Search books");
+        searchButton.setFont(new Font("Verdana", 20));
+        searchButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+        searchButton.setMinSize(250, 70);
+        Button getListButton = new Button("Get List Of All Books");
+        getListButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+        getListButton.setMinSize(250, 70);
+        getListButton.setFont(new Font("Verdana", 20));
+        Button reserveBookButton = new Button("Reserve Book");
+        reserveBookButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+        reserveBookButton.setMinSize(250, 70);
+        reserveBookButton.setFont(new Font("Verdana", 20));
+        Button addBookRequest = new Button("Add Book Request");
+        addBookRequest.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+        addBookRequest.setMinSize(250, 70);
+        addBookRequest.setFont(new Font("Verdana", 20));
+
+        VBox layout1 = new VBox(20);
+        layout1.getChildren().addAll(labelPane, searchButton, getListButton, reserveBookButton, addBookRequest);
+
+        labelPane.getChildren().addAll(bg, appLabel, searchButton);
+        VBox buttonBox = new VBox(20, labelPane, searchButton, getListButton, reserveBookButton, addBookRequest);
+        buttonBox.setStyle("-fx-alignment: center;");
+
+        layout1.setStyle("-fx-alignment: center;");
+        searchButton.setAlignment(Pos.CENTER);
+
+        BorderPane root2 = new BorderPane();
+        root2.setTop(layout1);
+        root2.setCenter(buttonBox);
+        Scene scene3 = new Scene(root2, 700, 600);
+
 
         stage.setTitle("Library Management System");
         stage.setScene(scene1);
@@ -92,7 +151,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         Application.launch();
-        /*UserDbConnector udb = new UserDbConnector();
+        /*UserDBConnector.UserDbConnector udb = new UserDBConnector.UserDbConnector();
         udb.display();
 
         System.out.println();
