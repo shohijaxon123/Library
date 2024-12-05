@@ -16,6 +16,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
+
         //---LOGIN SCENE---
         Label loginLabel = new Label("Login");
         loginLabel.setFont(new Font("Constantia", 30));
@@ -43,12 +44,6 @@ public class Main extends Application {
         registerHBox.setAlignment(Pos.CENTER);
         registerHBox.setSpacing(10);
         registerHBox.setPadding(new Insets(10));
-
-        /*ComboBox<String> roleComboBox = new ComboBox<>();
-        String role1 = "Admin";
-        String role2 = "User";
-        roleComboBox.getItems().addAll(role1, role2); // Add options
-        roleComboBox.setPromptText("Choose role"); // Placeholder text*/
 
         Button submitButton = new Button("Submit");
         submitButton.setStyle("-fx-background-color: #0088ff; -fx-text-fill: white;");
@@ -80,11 +75,60 @@ public class Main extends Application {
         layout2.getChildren().addAll(lbl3, btn4, btn5, btn6, btn7, backToFirstButton);
         Scene scene2 = new Scene(layout2, 300, 250);
 
-        //Scene scene4 = new Scene(loginPane, 500, 300);
 
-        //registerButton.setOnAction(e -> {
-        //    stage.setScene(scene4);// this is scene for register(add) user
-        //});
+        //---REGISTER SCENE---
+
+        Label registerLabel2 = new Label("Register");
+        registerLabel2.setFont(new Font("Constantia", 30));
+        HBox registerBox2 = new HBox(registerLabel2);
+        registerBox2.setAlignment(Pos.CENTER);
+        registerBox2.setPadding(new Insets(30));
+
+        Label lastNameLabel = new Label("Last Name: ");
+        lastNameLabel.setFont(new Font("Arial", 18));
+        TextField lastNameTextField = new TextField();
+        HBox lastNameHBox = new HBox(lastNameLabel, lastNameTextField);
+        lastNameHBox.setAlignment(Pos.CENTER);
+
+        Label firstNameLabel = new Label("First Name: ");
+        firstNameLabel.setFont(new Font("Arial", 18));
+        TextField firstNameTextField = new TextField();
+        HBox firstNameHBox = new HBox(firstNameLabel, firstNameTextField);
+        firstNameHBox.setAlignment(Pos.CENTER);
+
+        Label userNameLabel = new Label("Username: ");
+        userNameLabel.setFont(new Font("Arial", 18));
+        TextField userNameTextField = new TextField();
+        HBox userNameHBox = new HBox(userNameLabel, userNameTextField);
+        userNameHBox.setAlignment(Pos.CENTER);
+
+        Label passwordRegisterLabel = new Label("Password: ");
+        passwordRegisterLabel.setFont(new Font("Arial", 18));
+        TextField passwordRegisterTextField = new TextField();
+        HBox passwordRegisterHBox = new HBox(passwordRegisterLabel, passwordRegisterTextField);
+        passwordRegisterHBox.setAlignment(Pos.CENTER);
+
+        Button submitButton2 = new Button("Submit");
+        submitButton2.setStyle("-fx-background-color: #0088ff; -fx-text-fill: white;");
+        Button clearButton2 = new Button("Clear");
+        clearButton2.setStyle("-fx-background-color: #848d93; -fx-text-fill: white;");
+        HBox actionHBox2 = new HBox(submitButton2, clearButton2);
+        actionHBox2.setSpacing(20);
+        actionHBox2.setAlignment(Pos.CENTER);
+
+        VBox registerLayout = new VBox(10);
+        registerLayout.getChildren().addAll(lastNameHBox, firstNameHBox, userNameHBox, passwordRegisterHBox, actionHBox2);
+        BorderPane registerPane = new BorderPane();
+        registerPane.setTop(registerBox2);
+        registerPane.setCenter(registerLayout);
+
+        Scene scene4 = new Scene(registerPane, 500, 300);
+
+        registerButton.setOnAction(e -> {
+            stage.setScene(scene4);// this is scene for register(add) user
+        });
+
+
 
         backToFirstButton.setOnAction(event ->
         {
@@ -136,6 +180,24 @@ public class Main extends Application {
         root2.setCenter(buttonBox);
         Scene scene3 = new Scene(root2, 700, 600);
 
+        submitButton.setOnAction(event -> {
+            String Username = usernameTextField.getText();
+            String Password = passwordTextField.getText();
+            //String Role = roleComboBox.getValue();
+
+            UserDbConnector userdb = new UserDbConnector();
+            userdb.checkUserExistence(Username, Password);
+
+            //System.out.println(userdb.checkUserIsAdmin(Username, Password));
+            if (userdb.checkUserExistence(Username, Password) && userdb.checkUserIsAdmin(Username, Password)) {
+                stage.setScene(scene2);
+            } else if(userdb.checkUserExistence(Username, Password)) {
+                stage.setScene(scene3);
+            }
+            else {
+                System.out.println("Username and/or password is incorrect");
+            }
+        });
 
         stage.setTitle("Library Management System");
         stage.setScene(scene1);
@@ -151,12 +213,12 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         Application.launch();
-        /*UserDBConnector.UserDbConnector udb = new UserDBConnector.UserDbConnector();
+        UserDbConnector udb = new UserDbConnector();
         udb.display();
 
         System.out.println();
         System.out.println(udb.checkUserExistence("", "topgun00"));
-        System.out.println(udb.checkUserIsAdmin("topix10", "topgun00"));*/
+        System.out.println(udb.checkUserIsAdmin("topix10", "topgun00"));
     }
 }
 
