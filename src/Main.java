@@ -1,10 +1,13 @@
 import java.sql.*;
 import java.util.*;
+
+import javafx.collections.ObservableList;
 import javafx.geometry.*;
 //import models.*;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -16,6 +19,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
+        UserDbConnector userdb = new UserDbConnector();
+        BookDbConnector bookdb = new BookDbConnector();
 
         //---LOGIN SCENE---
         Label loginLabel = new Label("Login");
@@ -67,9 +72,95 @@ public class Main extends Application {
         Label lbl3 = new Label("Admin panel");
         Button backToFirstButton = new Button("Go back to login");
         Button btn4 = new Button("View all books");
+
+        TableView<Book> tableView = new TableView<>();
+        TableColumn<Book, Integer> idColumn = new TableColumn<>("ID");
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn<Book, String> titleColumn = new TableColumn<>("Title");
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        TableColumn<Book, String> authorColumn = new TableColumn<>("Author");
+        authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
+        TableColumn<Book, String> genreColumn = new TableColumn<>("Genre");
+        genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
+        TableColumn<Book, Integer> quantityColumn = new TableColumn<>("Quantity");
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        TableColumn<Book, String> statusColumn = new TableColumn<>("Status");
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        tableView.getColumns().addAll(idColumn, titleColumn, authorColumn, genreColumn, quantityColumn, statusColumn);
+        ObservableList<Book> books = bookdb.getBooks();
+        tableView.setItems(books);
+        VBox vbox = new VBox(tableView);
+        Scene scene6 = new Scene(vbox, 800, 600);
+
+
+        btn4.setOnAction(e ->{
+            stage.setScene(scene6);
+        });
+
         Button btn5 = new Button("Add new book");
-        Button btn6 = new Button("Update book info");
-        Button btn7 = new Button("Delete book");
+
+        Label addNewBookLabel = new Label("Add new book");
+        addNewBookLabel.setFont(new Font("Constantia", 30));
+        HBox addNewBookBox = new HBox(addNewBookLabel);
+        addNewBookBox.setAlignment(Pos.CENTER);
+        addNewBookBox.setPadding(new Insets(30));
+
+        Label addTitleLabel = new Label("Title: ");
+        addTitleLabel.setFont(new Font("Arial", 18));
+        TextField addTitleTextField = new TextField();
+        HBox addTitleHBox = new HBox(addTitleLabel, addTitleTextField);
+        addTitleHBox.setAlignment(Pos.CENTER);
+
+        Label addAuthorLabel = new Label("Author: ");
+        addAuthorLabel.setFont(new Font("Arial", 18));
+        TextField addAuthorTextField = new TextField();
+        HBox addAuthorHBox = new HBox(addAuthorLabel, addAuthorTextField);
+        addAuthorHBox.setAlignment(Pos.CENTER);
+
+        Label addGenreLabel = new Label("Genre: ");
+        addGenreLabel.setFont(new Font("Arial", 18));
+        TextField addGenreTextField = new TextField();
+        HBox addGenreHBox = new HBox(addGenreLabel, addGenreTextField);
+        addGenreHBox.setAlignment(Pos.CENTER);
+
+        Label addQuanityLabel = new Label("Quanity: ");
+        addQuanityLabel.setFont(new Font("Arial", 18));
+        TextField addQuanityTextField = new TextField();
+        HBox addQuanityHBox = new HBox(addQuanityLabel, addQuanityTextField);
+        addQuanityHBox.setAlignment(Pos.CENTER);
+
+        Button submitButton3 = new Button("Submit");
+        submitButton3.setStyle("-fx-background-color: #0088ff; -fx-text-fill: white;");
+        Button clearButton3 = new Button("Clear");
+        clearButton3.setStyle("-fx-background-color: #848d93; -fx-text-fill: white;");
+        HBox actionHBox3 = new HBox(submitButton3, clearButton3);
+        actionHBox3.setSpacing(20);
+        actionHBox3.setAlignment(Pos.CENTER);
+
+        VBox addNewBookLayout = new VBox(10);
+        addNewBookLayout.getChildren().addAll(addTitleHBox, addAuthorHBox, addGenreHBox, addQuanityHBox, actionHBox3);
+        BorderPane addNewBookPane = new BorderPane();
+        addNewBookPane.setTop(addNewBookBox);
+        addNewBookPane.setCenter(addNewBookLayout);
+
+        Scene scene5 = new Scene(addNewBookPane, 500, 300);
+
+        btn5.setOnAction(e ->{
+            stage.setScene(scene5);
+        });
+
+        submitButton3.setOnAction(e ->{
+            String Title = addTitleTextField.getText();
+            String Author = addAuthorTextField.getText();
+            String Genre = addGenreTextField.getText();
+            String Quantity = addQuanityTextField.getText();
+            int Quantity2 = Integer.parseInt(Quantity);
+            bookdb.addNewBook(Title, Author, Genre, Quantity2);
+        });
+
+        Button btn6 = new Button("Update book info"); //write almost the same code as in add new book
+
+        Button btn7 = new Button("Delete book"); //delete book by id
 
         VBox layout2 = new VBox(10);
         layout2.getChildren().addAll(lbl3, btn4, btn5, btn6, btn7, backToFirstButton);
@@ -128,7 +219,14 @@ public class Main extends Application {
             stage.setScene(scene4);// this is scene for register(add) user
         });
 
-
+        submitButton2.setOnAction(e ->{
+            String lastName = lastNameTextField.getText();
+            String firstName = firstNameTextField.getText();
+            String username = usernameTextField.getText();
+            String password = passwordRegisterTextField.getText();
+            userdb.addNewUser(lastName, firstName, username, password);
+            stage.setScene(scene1);
+        });
 
         backToFirstButton.setOnAction(event ->
         {
@@ -185,7 +283,7 @@ public class Main extends Application {
             String Password = passwordTextField.getText();
             //String Role = roleComboBox.getValue();
 
-            UserDbConnector userdb = new UserDbConnector();
+
             userdb.checkUserExistence(Username, Password);
 
             //System.out.println(userdb.checkUserIsAdmin(Username, Password));
