@@ -1,3 +1,5 @@
+package Models;
+
 public class Book {
     private int ID;
     private String title;
@@ -37,15 +39,5 @@ public class Book {
     }
     public int getQuantity(){
         return quantity;
-    }
-
-
-    public void displayInfo(){
-        System.out.println(ID);
-        System.out.println(title);
-        System.out.println(author);
-        System.out.println(genre);
-        System.out.println(quantity);
-        System.out.println(status);
     }
 }

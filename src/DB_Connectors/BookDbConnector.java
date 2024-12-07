@@ -1,3 +1,6 @@
+package DB_Connectors;
+
+import Models.Book;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -99,8 +102,8 @@ public class BookDbConnector {
         return vec;
     }
 
-    public Vector<Book> getBooksByTitle(String title){
-        Vector<Book> vec = new Vector<>();
+    public ObservableList<Book> getBooksByTitle(String title){
+        ObservableList<Book> vec = FXCollections.observableArrayList();
 
         String q = "Select * from books where title=?";
         try {
